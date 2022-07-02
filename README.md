@@ -47,6 +47,6 @@ Note: always start from develop branch
    2. with git-flow
  
 > git flow `release start` 0.1.0
-> git flow `release finish` '0.1.0
+> git flow `release finish` '0.1.0'
 
   
