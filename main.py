@@ -4,12 +4,15 @@ import dividend as dvd
 import info as i
 import re
 
-# tk.reload()
 df = tk.getModelFromFile('all')
-print(df.info())
 df = tk.filterOut(df)
 print(df.info())
+print(df.head())
+print(df.tail())
 print(df.isna().any())
+
+
+
 # print(dividend_with_info.query(queryString)[['tick','num_streak', 'market_cap','industry','sector']].sort_values(by=['market_cap'] , ascending=False))
 
 

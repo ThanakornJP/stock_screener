@@ -66,6 +66,7 @@ def getModelFromFile(model):
         df['sector'] = df_all['Sector']
         df['industry'] = df_all['Industry']
         df['country'] = df_all['Country']
+        df['exchange'] = 'nasdaq'
         
         # print(df.isna().any())
         df['market_cap'] = df['market_cap'].fillna(0)
@@ -90,6 +91,7 @@ def getModelFromFile(model):
         df['sector'] = df_all['Sector']
         df['industry'] = df_all['Industry']
         df['country'] = df_all['Country']
+        df['exchange'] = 'nyse'
         
         # print(df.isna().any())
         df['market_cap'] = df['market_cap'].fillna(0)
@@ -102,7 +104,9 @@ def getModelFromFile(model):
         return df
     else:        
         df_nasdaq = pd.read_csv('nasdaq_nasdaq.csv')
+        df_nasdaq['exchange'] = 'nasdaq'
         df_nyse = pd.read_csv('nasdaq_nyse.csv')
+        df_nyse['exchange'] = 'nyse'
         df_all = pd.concat([df_nasdaq, df_nyse], ignore_index=True)
         del df_nasdaq, df_nyse
 
@@ -115,6 +119,7 @@ def getModelFromFile(model):
         df['sector'] = df_all['Sector']
         df['industry'] = df_all['Industry']
         df['country'] = df_all['Country']
+        df['exchange'] = df_all['exchange']
         
         # print(df.isna().any())
         df['market_cap'] = df['market_cap'].fillna(0)
