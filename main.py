@@ -57,15 +57,16 @@ def loadModel(mode, sizing):
     
 
 
-# 1. load model
-model = loadModel("read", "m")
 
-queryString = "industry == '' " \
-    "or sector == '' " \
-    "or market_cap <= 0 " \
+model = loadModel("read", "xl")
+model = dvd.attribute_dividend(model)
+# queryString = "industry == '' " \
+#     "or sector == '' " \
+#     "or market_cap <= 0 " \
 
-df = model.query(queryString).sort_values(by=['market_cap'], ascending=False)
-print('# selected rows: ', len(df.index))
+# df = model.query(queryString).sort_values(by=['market_cap'], ascending=False)
+# print('# selected rows: ', len(df.index))
+
 
 
 # ------------------------------------------------------------

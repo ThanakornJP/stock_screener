@@ -6,6 +6,7 @@ from re import sub
 from decimal import Decimal
 import json
 import math
+import source as src
 
 def getDividends(ticker):
     headers = {
@@ -188,67 +189,71 @@ def reload():
     #df = model(load('tick.snp.csv'))
     #save(df,'dividends.snp.csv')
 
+def getRecessionYears():
+    return [1953,1958,1960,1970,1973,1980,1990,2001,2008,2020]
 
 
 def attribute_dividend(model):
-    _pe = []
-    _yield = []
-    _eps = []
-    _annualized_dividend = []
-
-    low_today = []
-    high_today = []
-    low_52 = []
-    high_52 = []
-    previous_close = []
+    tick = [] 
+    num_streak = [], 
+    streak_start_date = []
+    streak_end_date = []
+    payout_period = []
+    lastest_amount = []
+    incremental_percentage = []        
+    number_survive_proof = []
+    latest_survive_streak = []
+    number_survive_years = []
     
-    for index, row in model.iterrows():        
-        info = src.fetchSummaryFromNasdaq(row['tick'])
-        
+    recession = getRecessionYears()
+
+    for index, row in model.iterrows():                
+        info = src.fetchDividendFromNasdaq(row['tick'])
+
         print(row['tick'], " ==> " , info)
-        if info is None:
-            low_today.append('0.0')
-            high_today.append('0.0')
-            low_52.append('0.0')
-            high_52.append('0.0')
-            previous_close.append('0.0')        
+    #     if info is None:
+    #         low_today.append('0.0')
+    #         high_today.append('0.0')
+    #         low_52.append('0.0')
+    #         high_52.append('0.0')
+    #         previous_close.append('0.0')        
         
-            #### Attribute Ratio
-            _pe.append('0.0')
-            _yield.append('0.0')
-            _eps.append('0.0')                       
-            _annualized_dividend.append('0.0')
-        else: 
+    #         #### Attribute Ratio
+    #         _pe.append('0.0')
+    #         _yield.append('0.0')
+    #         _eps.append('0.0')                       
+    #         _annualized_dividend.append('0.0')
+    #     else: 
 
-            #### Attribute Statistics    
-            info['TodayHighLow']['value'] = '0/0' if info['TodayHighLow']['value'] is None else info['TodayHighLow']['value'].strip()  
-            #info['TodayHighLow']['value'] = info['TodayHighLow']['value']
-            info['FiftTwoWeekHighLow']['value'] = '0/0' if info['FiftTwoWeekHighLow']['value'] is None else info['FiftTwoWeekHighLow']['value'].strip()
-            #info['FiftTwoWeekHighLow']['value'] = info['FiftTwoWeekHighLow']['value']
-            highlow_today = info['TodayHighLow']['value'].split("/")        
-            highlow_52 = info['FiftTwoWeekHighLow']['value'].split("/")  
+    #         #### Attribute Statistics    
+    #         info['TodayHighLow']['value'] = '0/0' if info['TodayHighLow']['value'] is None else info['TodayHighLow']['value'].strip()  
+    #         #info['TodayHighLow']['value'] = info['TodayHighLow']['value']
+    #         info['FiftTwoWeekHighLow']['value'] = '0/0' if info['FiftTwoWeekHighLow']['value'] is None else info['FiftTwoWeekHighLow']['value'].strip()
+    #         #info['FiftTwoWeekHighLow']['value'] = info['FiftTwoWeekHighLow']['value']
+    #         highlow_today = info['TodayHighLow']['value'].split("/")        
+    #         highlow_52 = info['FiftTwoWeekHighLow']['value'].split("/")  
 
-            low_today.append(highlow_today[0])
-            high_today.append(highlow_today[1])
-            low_52.append(highlow_52[0])
-            high_52.append(highlow_52[1])
-            previous_close.append(info['PreviousClose']['value'].strip())        
+    #         low_today.append(highlow_today[0])
+    #         high_today.append(highlow_today[1])
+    #         low_52.append(highlow_52[0])
+    #         high_52.append(highlow_52[1])
+    #         previous_close.append(info['PreviousClose']['value'].strip())        
         
-            #### Attribute Ratio
-            _pe.append(info['PERatio']['value'])
-            _yield.append(info['Yield']['value'])
-            _eps.append(info['EarningsPerShare']['value'])                       
-            _annualized_dividend.append(info['AnnualizedDividend']['value'])
+    #         #### Attribute Ratio
+    #         _pe.append(info['PERatio']['value'])
+    #         _yield.append(info['Yield']['value'])
+    #         _eps.append(info['EarningsPerShare']['value'])                       
+    #         _annualized_dividend.append(info['AnnualizedDividend']['value'])
 
-    model['low_today'] = low_today
-    model['high_today'] = high_today
-    model['low_52'] = low_52
-    model['high_52'] = high_52
-    model['previous_close'] = previous_close
-    model['_pe'] = _pe
-    model['_yield'] = _yield
-    model['_eps'] = _eps
-    model['_annualized_dividend'] = _annualized_dividend
+    # model['low_today'] = low_today
+    # model['high_today'] = high_today
+    # model['low_52'] = low_52
+    # model['high_52'] = high_52
+    # model['previous_close'] = previous_close
+    # model['_pe'] = _pe
+    # model['_yield'] = _yield
+    # model['_eps'] = _eps
+    # model['_annualized_dividend'] = _annualized_dividend
     
     return model 
 
