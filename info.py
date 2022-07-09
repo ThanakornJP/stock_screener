@@ -331,12 +331,7 @@ def model(dividend_df):
 def save(df, model):
     df.to_csv(model)
 
-def getModel():
-    dividend_with_info = pd.read_csv('dividends_with_info.nasdaq.csv')
-    dividend_with_info['exchange'] = dividend_with_info['exchange'].fillna('')
-    dividend_with_info['industry'] = dividend_with_info['industry'].fillna('')
-    dividend_with_info['sector'] = dividend_with_info['sector'].fillna('')
-    return dividend_with_info
+
 
 
 

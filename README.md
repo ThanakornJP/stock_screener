@@ -1,5 +1,8 @@
 # stock_screener
 
+# Resource
+1. listed company: https://datahub.io/core/nasdaq-listings/r/nasdaq-listed.csv
+
 # Governance and Administration 
 [Git Workflow and Project](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
