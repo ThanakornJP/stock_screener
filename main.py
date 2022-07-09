@@ -1,8 +1,11 @@
+
 import pandas as pd
-import ticker as tk
-import dividend as dvd
-import info as i
 import re
+
+import ticker as tk
+import info as i
+import dividend as dvd
+
 
 def initModel(mode):
     if mode == 'new':
@@ -55,11 +58,11 @@ def loadModel(mode, sizing):
 
 
 # 1. load model
-model = loadModel("refresh", "m")
+model = loadModel("read", "m")
 
-queryString = "exchange != '' " \
-    "and industry != '' " \
-    "and sector != '' " \
+queryString = "industry == '' " \
+    "or sector == '' " \
+    "or market_cap <= 0 " \
 
 df = model.query(queryString).sort_values(by=['market_cap'], ascending=False)
 print('# selected rows: ', len(df.index))

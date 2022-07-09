@@ -175,7 +175,6 @@ def save(df, model):
     # df.to_csv('dividends_with_info.csv')
     df.to_csv(model)
 
-
 def reload():
     # --- NASDAQ ---
     df1 = model(load('tick.nasdaq.csv.1'))
@@ -185,10 +184,73 @@ def reload():
     df5 = model(load('tick.nasdaq.csv.5'))
     df = pd.concat([df1, df2, df3, df4, df5], ignore_index=True)
     save(df,'dividends.nasdaq.csv')
-
     # --- S&P 500 ---
     #df = model(load('tick.snp.csv'))
     #save(df,'dividends.snp.csv')
+
+
+
+def attribute_dividend(model):
+    _pe = []
+    _yield = []
+    _eps = []
+    _annualized_dividend = []
+
+    low_today = []
+    high_today = []
+    low_52 = []
+    high_52 = []
+    previous_close = []
+    
+    for index, row in model.iterrows():        
+        info = src.fetchSummaryFromNasdaq(row['tick'])
+        
+        print(row['tick'], " ==> " , info)
+        if info is None:
+            low_today.append('0.0')
+            high_today.append('0.0')
+            low_52.append('0.0')
+            high_52.append('0.0')
+            previous_close.append('0.0')        
+        
+            #### Attribute Ratio
+            _pe.append('0.0')
+            _yield.append('0.0')
+            _eps.append('0.0')                       
+            _annualized_dividend.append('0.0')
+        else: 
+
+            #### Attribute Statistics    
+            info['TodayHighLow']['value'] = '0/0' if info['TodayHighLow']['value'] is None else info['TodayHighLow']['value'].strip()  
+            #info['TodayHighLow']['value'] = info['TodayHighLow']['value']
+            info['FiftTwoWeekHighLow']['value'] = '0/0' if info['FiftTwoWeekHighLow']['value'] is None else info['FiftTwoWeekHighLow']['value'].strip()
+            #info['FiftTwoWeekHighLow']['value'] = info['FiftTwoWeekHighLow']['value']
+            highlow_today = info['TodayHighLow']['value'].split("/")        
+            highlow_52 = info['FiftTwoWeekHighLow']['value'].split("/")  
+
+            low_today.append(highlow_today[0])
+            high_today.append(highlow_today[1])
+            low_52.append(highlow_52[0])
+            high_52.append(highlow_52[1])
+            previous_close.append(info['PreviousClose']['value'].strip())        
+        
+            #### Attribute Ratio
+            _pe.append(info['PERatio']['value'])
+            _yield.append(info['Yield']['value'])
+            _eps.append(info['EarningsPerShare']['value'])                       
+            _annualized_dividend.append(info['AnnualizedDividend']['value'])
+
+    model['low_today'] = low_today
+    model['high_today'] = high_today
+    model['low_52'] = low_52
+    model['high_52'] = high_52
+    model['previous_close'] = previous_close
+    model['_pe'] = _pe
+    model['_yield'] = _yield
+    model['_eps'] = _eps
+    model['_annualized_dividend'] = _annualized_dividend
+    
+    return model 
 
 
 # def getTickers(index):
