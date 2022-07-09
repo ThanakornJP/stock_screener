@@ -1,0 +1,34 @@
+,tick,name,market_cap,volume,ipo_year,sector,industry,country,exchange,low_today,high_today,low_52,high_52,previous_close,_pe,_yield,_eps,_annualized_dividend
+8,AAPL,Apple Inc. Common Stock,2549282473600.0,64491958,1980.0,Technology,Computer Manufacturing,United States,nasdaq,147.55,145.0,182.94,129.04,146.35,23.87,0.64,6.16,0.92
+283,AMZN,Amazon.com Inc. Common Stock,1175837662628.0,45658078,1997.0,Consumer Discretionary,Catalog/Specialty Distribution,United States,nasdaq,116.58,113.69,188.65,101.26,116.33,55.78,0.0,2.07,0.0
+492,AVGO,Broadcom Inc. Common Stock,201379848813.0,1269997,2009.0,Technology,Semiconductors,United States,nasdaq,499.63,490.0,677.76,457.59,498.54,24.72,3.4,20.17,16.4
+522,AZN,AstraZeneca PLC American Depositary Shares,207568503695.0,6114921,0,Health Care,Biotechnology: Pharmaceutical Preparations,United Kingdom,nasdaq,67.24,65.94,71.7,53.63,66.92,0.0,2.9,-0.32,1.93
+1090,COST,Costco Wholesale Corporation Common Stock,222163637441.0,2606471,0,Consumer Discretionary,Department/Specialty Retail Stores,United States,nasdaq,505.52,497.0,612.27,403.16,494.95,39.49,0.73,12.7,3.6
+1961,GOOG,Alphabet Inc. Class C Capital Stock,1582618849385.0,1453165,2004.0,Technology,Internet and Information Services,United States,nasdaq,2408.7,2350.28,3042.0,2044.16,2386.12,21.74,0.0,110.56,0.0
+1962,GOOGL,Alphabet Inc. Class A Common Stock,1571885301390.0,1910722,2004.0,Technology,Internet and Information Services,United States,nasdaq,2393.7,2338.03,3030.93,2037.69,2375.66,21.59,0.0,110.56,0.0
+2879,META,Meta Platforms Inc. Class A Common Stock,462456540371.0,19236903,2012.0,Technology,Internet and Information Services,United States,nasdaq,172.4,168.15,384.33,154.25,172.19,12.93,0.0,13.22,0.0
+3001,MSFT,Microsoft Corporation Common Stock,2001838008914.0,19648084,1986.0,Technology,Computer Software: Prepackaged Software,United States,nasdaq,268.1,263.29,349.67,241.51,268.4,27.94,0.93,9.58,2.48
+3198,NVDA,NVIDIA Corporation Common Stock,395950000000.0,46762199,1999.0,Technology,Semiconductors,United States,nasdaq,160.37,153.89,346.47,140.55,158.58,42.46,0.11,3.73,0.16
+3461,PEP,PepsiCo Inc. Common Stock,237655650121.0,3482910,0,Consumer Staples,Beverages (Production/Distribution),United States,nasdaq,172.7,170.55,177.62,148.78,170.36,23.51,2.69,7.31,4.6
+4487,TSLA,Tesla Inc. Common Stock,779666261153.0,33318871,2010.0,Consumer Discretionary,Auto Manufacturing,United States,nasdaq,764.94,723.48,1243.49,620.46,733.63,102.07,0.0,7.37,0.0
+4933,ABBV,AbbVie Inc. Common Stock,270102776187.0,4078375,2012.0,Health Care,Other Pharmaceuticals,United States,nyse,155.25,151.79,175.91,105.56,152.0,21.93,3.7,6.97,5.64
+5223,BABA,Alibaba Group Holding Limited American Depositary Shares each representing eight Ordinary share,323407500000.0,27200419,2014.0,Consumer Discretionary,Catalog/Specialty Distribution,China,nyse,125.84,120.7,216.6,73.28,122.39,39.38,0.0,3.07,0.0
+5224,BAC,Bank of America Corporation Common Stock,274260358628.0,31132091,0,Finance,Major Banks,United States,nyse,32.25,31.56,50.11,30.45,31.86,9.08,2.71,3.5,0.84
+5696,CVX,Chevron Corporation Common Stock,280516417113.0,7914493,0,Energy,Integrated oil Companies,United States,nyse,145.45,141.09,182.4,92.86,143.52,13.42,4.03,10.64,5.68
+6285,HD,Home Depot Inc. (The) Common Stock,294420959381.0,1890325,0,Consumer Discretionary,RETAIL: Building Materials,United States,nyse,287.99,283.91,420.61,264.51,286.69,18.19,2.68,15.75,7.6
+6501,JNJ,Johnson & Johnson Common Stock,469126313617.0,3828297,0,Health Care,Biotechnology: Pharmaceutical Preparations,United States,nyse,179.99,177.77,186.69,155.72,178.5,24.03,2.54,7.42,4.52
+6508,JPM,JP Morgan Chase & Co. Common Stock,335881091292.0,8805235,0,Finance,Major Banks,United States,nyse,115.65,113.61,172.96,109.3,114.72,8.48,3.57,13.48,4.0
+6570,KO,Coca-Cola Company (The) Common Stock,273713713823.0,11308730,0,Consumer Staples,Beverages (Production/Distribution),United States,nyse,63.42,62.88,67.2,52.28,62.91,26.53,2.78,2.38,1.76
+6632,LLY,Eli Lilly and Company Common Stock,313999229463.0,1898148,0,Health Care,Biotechnology: Pharmaceutical Preparations,United States,nyse,334.52,326.16,332.74,220.2,327.95,48.96,1.19,6.75,3.92
+6666,MA,Mastercard Incorporated Common Stock,314222604212.0,1660944,2006.0,Consumer Discretionary,Business Services,United States,nyse,324.98,319.35,399.92,303.65,324.07,33.62,0.61,9.61,1.96
+6792,MRK,Merck & Company Inc. Common Stock (new),234622530220.0,7161462,0,Health Care,Biotechnology: Pharmaceutical Preparations,United States,nyse,93.82,92.41,95.72,70.89,93.01,16.6,2.96,5.59,2.76
+6998,NVO,Novo Nordisk A/S Common Stock,246881375185.0,967049,0,Health Care,Biotechnology: Pharmaceutical Preparations,Denmark,nyse,109.56,107.47,122.16,85.73,109.94,32.45,1.34,3.36,1.483
+7134,PFE,Pfizer Inc. Common Stock,298331329739.0,11319768,0,Health Care,Biotechnology: Pharmaceutical Preparations,United States,nyse,53.92,52.76,61.71,38.93,53.42,12.2,3.03,4.36,1.6
+7143,PG,Procter & Gamble Company (The) Common Stock,347946027882.0,4293710,0,Consumer Discretionary,Package Goods/Cosmetics,United States,nyse,146.81,144.58,165.35,129.5,146.0,25.31,2.5,5.73,3.653
+7711,TM,Toyota Motor Corporation Common Stock,215297094093.0,159135,0,Consumer Discretionary,Auto Manufacturing,Japan,nyse,157.33,156.2,213.74,152.14,157.15,8.55,2.57,18.33,3.925
+7715,TMO,Thermo Fisher Scientific Inc Common Stock,216756424020.0,752253,0,Industrials,Biotechnology: Laboratory Analytical Instruments,United States,nyse,558.18,548.89,672.34,497.83,553.76,28.87,0.22,19.18,1.2
+7766,TSM,Taiwan Semiconductor Manufacturing Company Ltd.,422694451303.0,10001473,1997.0,Technology,Semiconductors,Taiwan,nyse,82.16,79.76,145.0,73.74,80.65,17.88,1.95,4.56,1.461
+7827,UNH,UnitedHealth Group Incorporated Common Stock (DE),486563938464.0,3092065,0,Health Care,Medical Specialities,United States,nyse,528.37,511.01,553.29,383.12,514.38,28.39,1.28,18.27,6.6
+7862,V,Visa Inc.,430793793757.0,3621304,0,Consumer Discretionary,Business Services,United States,nyse,204.1,200.46,252.67,185.91,202.8,32.01,0.75,6.36,1.5
+7985,WMT,Walmart Inc. Common Stock,343740216270.0,4916012,0,Consumer Discretionary,Department/Specialty Retail Stores,United States,nyse,126.61,125.15,160.77,117.27,125.32,26.97,1.79,4.65,2.24
+8026,XOM,Exxon Mobil Corporation Common Stock,362672687175.0,17667967,0,Energy,Oil & Gas Production,United States,nyse,87.3,84.93,105.57,52.1,85.94,14.28,4.23,6.03,3.52

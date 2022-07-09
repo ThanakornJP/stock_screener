@@ -60,7 +60,7 @@ def getModelFromFile(model):
         del df_nasdaq
 
         df = pd.DataFrame()
-        df['tick'] = df_all['Symbol']
+        df['tick'] = df_all['Symbol'].str.strip()
         df['name'] = df_all['Name']
         df['market_cap'] = df_all['Market Cap']
         df['volume'] = df_all['Volume']
@@ -85,7 +85,7 @@ def getModelFromFile(model):
         del df_nyse
 
         df = pd.DataFrame()
-        df['tick'] = df_all['Symbol']
+        df['tick'] = df_all['Symbol'].str.strip()
         df['name'] = df_all['Name']
         df['market_cap'] = df_all['Market Cap']
         df['volume'] = df_all['Volume']
@@ -113,7 +113,7 @@ def getModelFromFile(model):
         del df_nasdaq, df_nyse
 
         df = pd.DataFrame()
-        df['tick'] = df_all['Symbol']
+        df['tick'] = df_all['Symbol'].str.strip()
         df['name'] = df_all['Name']
         df['market_cap'] = df_all['Market Cap']
         df['volume'] = df_all['Volume']

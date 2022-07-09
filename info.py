@@ -9,6 +9,10 @@ import yfinance as yf
 from bs4 import BeautifulSoup
 import requests
 
+import source as src
+
+
+
 
 def fetchInfo(ticker):
     
@@ -332,6 +336,144 @@ def save(df, model):
     df.to_csv(model)
 
 
+def attribute_data(model):
+    _pe = []
+    _yield = []
+    _eps = []
+    _annualized_dividend = []
+
+    low_today = []
+    high_today = []
+    low_52 = []
+    high_52 = []
+    previous_close = []
+    
+    for index, row in model.iterrows():        
+        info = src.fetchSummaryFromNasdaq(row['tick'])
+        
+        print(row['tick'], " ==> " , info)
+        if info is None:
+            low_today.append('0.0')
+            high_today.append('0.0')
+            low_52.append('0.0')
+            high_52.append('0.0')
+            previous_close.append('0.0')        
+        
+            #### Attribute Ratio
+            _pe.append('0.0')
+            _yield.append('0.0')
+            _eps.append('0.0')                       
+            _annualized_dividend.append('0.0')
+        else: 
+
+            #### Attribute Statistics    
+            info['TodayHighLow']['value'] = '0/0' if info['TodayHighLow']['value'] is None else info['TodayHighLow']['value'].strip()  
+            #info['TodayHighLow']['value'] = info['TodayHighLow']['value']
+            info['FiftTwoWeekHighLow']['value'] = '0/0' if info['FiftTwoWeekHighLow']['value'] is None else info['FiftTwoWeekHighLow']['value'].strip()
+            #info['FiftTwoWeekHighLow']['value'] = info['FiftTwoWeekHighLow']['value']
+            highlow_today = info['TodayHighLow']['value'].split("/")        
+            highlow_52 = info['FiftTwoWeekHighLow']['value'].split("/")  
+
+            low_today.append(highlow_today[0])
+            high_today.append(highlow_today[1])
+            low_52.append(highlow_52[0])
+            high_52.append(highlow_52[1])
+            previous_close.append(info['PreviousClose']['value'].strip())        
+        
+            #### Attribute Ratio
+            _pe.append(info['PERatio']['value'])
+            _yield.append(info['Yield']['value'])
+            _eps.append(info['EarningsPerShare']['value'])                       
+            _annualized_dividend.append(info['AnnualizedDividend']['value'])
+
+    model['low_today'] = low_today
+    model['high_today'] = high_today
+    model['low_52'] = low_52
+    model['high_52'] = high_52
+    model['previous_close'] = previous_close
+    model['_pe'] = _pe
+    model['_yield'] = _yield
+    model['_eps'] = _eps
+    model['_annualized_dividend'] = _annualized_dividend
+    
+    return model 
+
+def clean_ratio(model):
+    model['_pe'] = model['_pe'].astype(str)
+    model['_pe'] = model['_pe'].fillna('0')
+    model['_pe'] = model['_pe'].str.replace('N/A','0')
+    model['_pe'] = model['_pe'].str.replace('$','')
+    model['_pe'] = model['_pe'].str.replace(',','')
+    model['_pe'] = model['_pe'].astype(float)
+
+    model['_yield'] = model['_yield'].astype(str)
+    model['_yield'] = model['_yield'].fillna('0.0')
+    model['_yield'] = model['_yield'].str.replace('N/A','0.0')
+    model['_yield'] = model['_yield'].str.replace('$','')
+    model['_yield'] = model['_yield'].str.replace('%','')
+    model['_yield'] = model['_yield'].str.replace(',','')
+    model['_yield'] = model['_yield'].astype(float)
+
+    model['_eps'] = model['_eps'].astype(str)
+    model['_eps'] = model['_eps'].fillna('0.0')
+    model['_eps'] = model['_eps'].str.replace('N/A','0.0')
+    model['_eps'] = model['_eps'].str.replace('$','')
+    model['_eps'] = model['_eps'].str.replace(',','')
+    model['_eps'] = model['_eps'].astype(float)
+
+    return model
+
+def clean_stat(model):
+    model['low_today'] = model['low_today'].fillna('0.0')
+    model['low_today'] = model['low_today'].str.replace('N/A','0')
+    model['low_today'] = model['low_today'].str.replace('N','0')
+    model['low_today'] = model['low_today'].str.replace('A','0')
+    model['low_today'] = model['low_today'].str.replace('$','')
+    model['low_today'] = model['low_today'].str.replace(',','')
+    model['low_today'] = model['low_today'].astype(float)
+
+    model['high_today'] = model['high_today'].fillna('0.0')
+    model['high_today'] = model['high_today'].str.replace('N/A','0')
+    model['high_today'] = model['high_today'].str.replace('N','0')
+    model['high_today'] = model['high_today'].str.replace('A','0')
+    model['high_today'] = model['high_today'].str.replace('$','')
+    model['high_today'] = model['high_today'].str.replace(',','')
+    model['high_today'] = model['high_today'].astype(float)
+
+    
+    model['low_52'] = model['low_52'].fillna('0.0')
+    model['low_52'] = model['low_52'].str.replace('N/A','0')
+    model['low_52'] = model['low_52'].str.replace('N','0')
+    model['low_52'] = model['low_52'].str.replace('A','0')
+    model['low_52'] = model['low_52'].str.replace('$','')
+    model['low_52'] = model['low_52'].str.replace(',','')        
+    model['low_52'] = model['low_52'].astype(float)
+
+    model['high_52'] = model['high_52'].fillna('0.0')    
+    model['high_52'] = model['high_52'].str.replace('N/A','0')
+    model['high_52'] = model['high_52'].str.replace('N','0')
+    model['high_52'] = model['high_52'].str.replace('A','0')
+    model['high_52'] = model['high_52'].str.replace('$','')
+    model['high_52'] = model['high_52'].str.replace(',','')    
+    model['high_52'] = model['high_52'].astype(float)
+
+    model['previous_close'] = model['previous_close'].fillna('0.0')    
+    model['previous_close'] = model['previous_close'].str.replace('N/A','0')
+    model['previous_close'] = model['previous_close'].str.replace('N','0')    
+    model['previous_close'] = model['previous_close'].str.replace('$','')
+    model['previous_close'] = model['previous_close'].str.replace(',','')    
+    model['previous_close'] = model['previous_close'].astype(float)
+
+    
+    model['_annualized_dividend'] = model['_annualized_dividend'].fillna('0.0')
+    model['_annualized_dividend'] = model['_annualized_dividend'].str.replace('N/A','0')
+    model['_annualized_dividend'] = model['_annualized_dividend'].str.replace('N','0')
+    model['_annualized_dividend'] = model['_annualized_dividend'].str.replace('$','')
+    model['_annualized_dividend'] = model['_annualized_dividend'].str.replace(',','')
+    model['_annualized_dividend'] = model['_annualized_dividend'].astype(float)
+
+    return model
+   
 
 
 
