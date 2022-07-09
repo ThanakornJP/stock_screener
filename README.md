@@ -49,4 +49,30 @@ Note: always start from develop branch
 > git flow `release start` 0.1.0
 > git flow `release finish` '0.1.0'
 
+.
+---
+
+Step
+1. get tickers - NASDAQ, NYSE `ticker.py`
+2. attribute information `info.py`
+   1. exchange, industry, sector, market cap, volume
+   2. PE, PS, PFCF, EPS, Yield
+   3. Day's Range
+   4. 52's Range
+
+> Note: Market Capital Segmentation
+> Mega - market cap > 200B
+> Large - market cap = 10B - 200B
+> Medium - market cap = 2B - 10B
+> Small - market cap = 300M - 2B 
+> Micro - market cap = 50M - 300M
+> Nano - market cap = < 50M
+
+1. attribute dividend `dividend.py`
+   1. streak
+   2. recently first year that streak begins 
+   3. no. year recession that it still paid out
+
+   
+   
   

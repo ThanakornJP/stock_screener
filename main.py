@@ -4,17 +4,18 @@ import dividend as dvd
 import info as i
 import re
 
-
 # tk.reload()
-# dvd.reload()
-# i.save(i.model(pd.read_csv('dividends.nasdaq.csv')),'dividends_with_info.nasdaq.csv')
+
+
+dvd.reload()
+i.save(i.model(pd.read_csv('dividends.nasdaq.csv')),'dividends_with_info.nasdaq.csv')
 dividend_with_info = i.getModel()
 
 
-print(dividend_with_info.info())
-#print(dividend_with_info.head())
-print(dividend_with_info.isna().any())
-#print(dividend_with_info.isnull().any())
+# print(dividend_with_info.info())
+# #print(dividend_with_info.head())
+# print(dividend_with_info.isna().any())
+# #print(dividend_with_info.isnull().any())
 
 # print(dividend_with_info[dividend_with_info['exchange'].isna()])
 # print(dividend_with_info[dividend_with_info['industry'].notna()])
