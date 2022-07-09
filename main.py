@@ -5,11 +5,18 @@ import info as i
 import re
 
 # tk.reload()
+df = tk.getModelFromFile('all')
+print(df.info())
+df = tk.filterOut(df)
+print(df.info())
+print(df.isna().any())
+# print(dividend_with_info.query(queryString)[['tick','num_streak', 'market_cap','industry','sector']].sort_values(by=['market_cap'] , ascending=False))
 
 
-dvd.reload()
-i.save(i.model(pd.read_csv('dividends.nasdaq.csv')),'dividends_with_info.nasdaq.csv')
-dividend_with_info = i.getModel()
+
+# dvd.reload()
+# i.save(i.model(pd.read_csv('dividends.nasdaq.csv')),'dividends_with_info.nasdaq.csv')
+# dividend_with_info = i.getModel()
 
 
 # print(dividend_with_info.info())
@@ -95,10 +102,12 @@ dividend_with_info = i.getModel()
 #     "and _eps > 0.0 " \
 #     "and _annualized_dividend > 0.0 "
 
-queryString = "exchange != '' " \
-    "and industry != '' " \
-    "and sector != '' " \
-    "and market_cap > 1000000 " \
-    "and _pe > 0"
 
-print(dividend_with_info.query(queryString)[['tick','num_streak', 'market_cap','industry','sector']].sort_values(by=['market_cap'] , ascending=False))
+# work!
+# queryString = "exchange != '' " \
+#     "and industry != '' " \
+#     "and sector != '' " \
+#     "and market_cap > 1000000 " \
+#     "and _pe > 0"
+
+# print(dividend_with_info.query(queryString)[['tick','num_streak', 'market_cap','industry','sector']].sort_values(by=['market_cap'] , ascending=False))
