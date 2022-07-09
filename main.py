@@ -6,12 +6,15 @@ import re
 
 df = tk.getModelFromFile('all')
 df = tk.filterOut(df)
-print(df.info())
-print(df.head())
-print(df.tail())
-print(df.isna().any())
+# print(df.info())
+# print(df.head())
+# print(df.tail())
+# print(df.isna().any())
 tk.saveToFile(df, 'model.csv')
 
+queryString = (df['tick'].str.len() > 4) & (df['market_cap'] > 0)
+print(df.loc[queryString])
+    
 
 
 
