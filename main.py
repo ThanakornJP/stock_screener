@@ -10,6 +10,8 @@ print(df.info())
 print(df.head())
 print(df.tail())
 print(df.isna().any())
+tk.saveToFile(df, 'model.csv')
+
 
 
 

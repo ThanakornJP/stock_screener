@@ -34,8 +34,8 @@ def load(exchange):
     else:
         return None
 
-def save(df, model):
-    with open(model, 'w') as f:
+def save(df, filename):
+    with open(filename, 'w') as f:
         for tick in df:    
             f.write(tick)
             f.write('\n')
@@ -50,6 +50,8 @@ def filterOut(model):
     queryString = ((model['tick'].str.len() <= 4) | (model['tick'].str.len() > 4) & (~model['tick'].str[-1:].isin(terminating_symbol) ) )     
     return model.loc[queryString]
     
+def saveToFile(model, filename):
+    model.to_csv(filename)
 
 def getModelFromFile(model):
     if model == 'nasdaq':    
