@@ -1,12 +1,13 @@
 import requests 
 from bs4 import BeautifulSoup
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from re import sub
 from decimal import Decimal
 import json
 import math
 import source as src
+import numpy as np
 
 def getDividends(ticker):
     headers = {
@@ -193,70 +194,108 @@ def getRecessionYears():
     return [1953,1958,1960,1970,1973,1980,1990,2001,2008,2020]
 
 
+def attribute_data(model):        
+    raw_dividends = []
+
+    for index, row in model.iterrows():     
+        print(row['tick'])           
+        info = src.fetchDividendFromNasdaq(row['tick'])
+
+        # print(row['tick'], ' ==> ')
+        # print(info)
+        if info is None:
+            raw_dividends.append([])           
+        else: 
+            raw_dividends.append(info)
+            
+    model['raw_dividends'] = raw_dividends
+
+    return model 
+
 def attribute_dividend(model):
-    tick = [] 
-    num_streak = [], 
+    # lastest_amount = []
+    # incremental_percentage = []        
+    # model['lastest_amount'] = lastest_amount
+    # model['incremental_percentage'] = incremental_percentage
+    return model 
+
+def attribute_streak(model):
+    num_streak = []
     streak_start_date = []
     streak_end_date = []
     payout_period = []
-    lastest_amount = []
-    incremental_percentage = []        
-    number_survive_proof = []
-    latest_survive_streak = []
-    number_survive_years = []
-    
-    recession = getRecessionYears()
+    incremental_percentage = []
+    print('----- streak -----')
+    print()
 
-    for index, row in model.iterrows():                
-        info = src.fetchDividendFromNasdaq(row['tick'])
+    for index, row in model.iterrows():    
+        _num_streak = 0
+        _incremental_percentage = 0
+        _streak_start_date = ''
+        print(row['tick'])
+        if len(row['raw_dividends']) > 1:            
+            #streak_start_date.append(row['raw_dividends'][-1]['exOrEffDate'])             
+            #print(row['raw_dividends'][-1]['exOrEffDate'])
 
-        print(row['tick'], " ==> " , info)
-    #     if info is None:
-    #         low_today.append('0.0')
-    #         high_today.append('0.0')
-    #         low_52.append('0.0')
-    #         high_52.append('0.0')
-    #         previous_close.append('0.0')        
+            tmp = pd.DataFrame(row['raw_dividends'])            
+            tmp['amount'] = tmp['amount'].str.replace('$','')
+            tmp['amount'] = tmp['amount'].str.replace(',','')
+            tmp['amount'] = tmp['amount'].str.replace('.','')
+            tmp['amount'].fillna('0.0', inplace=True)
+            tmp['amount'] = tmp['amount'].astype(float)
+            
+            tmp['exOrEffDate'] = tmp['exOrEffDate'].fillna('1/1/1800')
+            tmp['exOrEffDate'] = tmp['exOrEffDate'].str.replace('N/A','1/1/1800')
+            tmp['exOrEffDate'] = pd.to_datetime(tmp['exOrEffDate'], format='%m/%d/%Y')
+
+            payout_list = tmp['exOrEffDate'].diff()            
+            payout_list.replace({pd.NaT: pd.Timedelta(days=0)}, inplace=True)
+            
+            for i, value in payout_list.items():
+                #print((value + timedelta(days=100)).days)                
+                if abs(value.days)-90 > 15:                                         
+                    amount_chg = tmp['amount'].iloc[0:i].pct_change()
+                    amount_chg.fillna(0.0, inplace=True)
+
+                    _num_streak = i                    
+                    _streak_start_date = row['raw_dividends'][i-1]['exOrEffDate']
+                    _incremental_percentage = np.average(amount_chg)
+                    break
+
+        num_streak.append(_num_streak)
+        incremental_percentage.append(_incremental_percentage)
+        streak_start_date.append(_streak_start_date)
         
-    #         #### Attribute Ratio
-    #         _pe.append('0.0')
-    #         _yield.append('0.0')
-    #         _eps.append('0.0')                       
-    #         _annualized_dividend.append('0.0')
-    #     else: 
+    model['num_streak'] = num_streak
+    model['streak_start_date'] = streak_start_date
+    model['incremental_percentage'] = incremental_percentage
+    return model
 
-    #         #### Attribute Statistics    
-    #         info['TodayHighLow']['value'] = '0/0' if info['TodayHighLow']['value'] is None else info['TodayHighLow']['value'].strip()  
-    #         #info['TodayHighLow']['value'] = info['TodayHighLow']['value']
-    #         info['FiftTwoWeekHighLow']['value'] = '0/0' if info['FiftTwoWeekHighLow']['value'] is None else info['FiftTwoWeekHighLow']['value'].strip()
-    #         #info['FiftTwoWeekHighLow']['value'] = info['FiftTwoWeekHighLow']['value']
-    #         highlow_today = info['TodayHighLow']['value'].split("/")        
-    #         highlow_52 = info['FiftTwoWeekHighLow']['value'].split("/")  
+def attribute_recession_proof(model):
+    num_surviving_years_thru_recession = []
+    num_surviving_years_since_ipo = []
 
-    #         low_today.append(highlow_today[0])
-    #         high_today.append(highlow_today[1])
-    #         low_52.append(highlow_52[0])
-    #         high_52.append(highlow_52[1])
-    #         previous_close.append(info['PreviousClose']['value'].strip())        
-        
-    #         #### Attribute Ratio
-    #         _pe.append(info['PERatio']['value'])
-    #         _yield.append(info['Yield']['value'])
-    #         _eps.append(info['EarningsPerShare']['value'])                       
-    #         _annualized_dividend.append(info['AnnualizedDividend']['value'])
-
-    # model['low_today'] = low_today
-    # model['high_today'] = high_today
-    # model['low_52'] = low_52
-    # model['high_52'] = high_52
-    # model['previous_close'] = previous_close
-    # model['_pe'] = _pe
-    # model['_yield'] = _yield
-    # model['_eps'] = _eps
-    # model['_annualized_dividend'] = _annualized_dividend
+    payout_year_listed = []
+    recession_year_listed = getRecessionYears()
     
-    return model 
+    print('recession')
+    for index, row in model.iterrows():     
+        print(row['tick'])           
+        from_1st_payout_to_present = 0
+        if len(row['raw_dividends']) > 1 and row['raw_dividends'][-1]['exOrEffDate'] != "N/A":
+            from_1st_payout_to_present = int(datetime.now().year) - int(datetime.strptime(row['raw_dividends'][-1]['exOrEffDate'],  "%m/%d/%Y").year)        
+            payout_year_listed = []
+            for index, dividend in enumerate(row['raw_dividends']):                                                 
+                d = datetime.strptime(dividend['exOrEffDate'],  "%m/%d/%Y")                
+                payout_year_listed.append(int(d.strftime("%Y")))   
+            payout_year_listed = list(dict.fromkeys(payout_year_listed))
+            
+        num_surviving_years_since_ipo.append(from_1st_payout_to_present)
+        num_surviving_years_thru_recession.append(len(set(payout_year_listed) & set(recession_year_listed)))
 
+    model['num_surviving_years_thru_recession'] = num_surviving_years_thru_recession    
+    model['num_surviving_years_since_ipo'] = num_surviving_years_since_ipo
+    return model
 
 # def getTickers(index):
 #     #lines = object()
