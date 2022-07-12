@@ -40,7 +40,7 @@ def fetchSummaryFromNasdaq(tick):
     except TypeError:
         return None
 
-def fetchSummaryFromYahoo(source, ticker):
+def fetchSummaryFromYahoo(source, tick):
     headers = getHeader('yahoo')
     params = { 'assetclass': 'stocks'}
     try:
@@ -61,3 +61,34 @@ def fetchSummaryFromYahoo(source, ticker):
             return []
     except TypeError:
         return []
+
+def fetchDividendFromNasdaq(tick):
+    headers = {
+        'authority': 'api.nasdaq.com',
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,th;q=0.8',
+        'origin': 'https://www.nasdaq.com',
+        'referer': 'https://www.nasdaq.com/',
+        'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"macOS"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-site',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+    }
+
+    params = {
+        'assetclass': 'stocks',
+    }
+    try:
+        response = requests.get('https://api.nasdaq.com/api/quote/' + tick + '/dividends', params=params, headers=headers)
+        response_json = response.json()        
+        response_json_data = response_json['data']        
+        dividends = response_json_data['dividends']['rows']
+        if dividends is not None:        
+            return dividends
+        else:
+            return None
+    except TypeError:
+        return None

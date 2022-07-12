@@ -1,8 +1,11 @@
+
 import pandas as pd
-import ticker as tk
-import dividend as dvd
-import info as i
 import re
+
+import ticker as tk
+import info as i
+import dividend as dvd
+
 
 def initModel(mode):
     if mode == 'new':
@@ -49,20 +52,39 @@ def loadModel(mode, sizing):
         print('sample rows after getting attributed')
         print(filtered_model.head())
         print(filtered_model.tail())
+
+        filtered_model = dvd.attribute_data(filtered_model)
+        filtered_model = dvd.attribute_recession_proof(filtered_model)
+        filtered_model = dvd.attribute_streak(filtered_model)
+
         filtered_model.to_csv('model.attributed.' + sizing + '.csv')
         return filtered_model
-    
 
 
-# 1. load model
-model = loadModel("refresh", "m")
+modelM = loadModel("read", "m")
+modelL = loadModel("read", "l")
+modelXL = loadModel("read", "xl")
+model = pd.concat([modelM, modelL, modelXL], ignore_index=True)
+     
+print(model.info())
 
-queryString = "exchange != '' " \
-    "and industry != '' " \
+queryString = "industry != '' " \
     "and sector != '' " \
+    "and num_streak > 3.9 " \
+    "and num_surviving_years_since_ipo > 6.3 " \
+    "and market_cap > 2.75e+10"
+     
+    #"and num_surviving_years_thru_recession > 1.24 " \ 
 
-df = model.query(queryString).sort_values(by=['market_cap'], ascending=False)
+df = model.query(queryString).sort_values(by=['market_cap', 'num_streak', 'volume'], ascending=False)
+# print(df['num_streak'].describe()) #std 13.3, mean 3.9 
+# print(df['num_surviving_years_thru_recession'].describe()) #std 0.86, mean 1.24
+# print(df['num_surviving_years_since_ipo'].describe()) #std 7.1, mean 6.3
+# print(df['market_cap'].describe()) #  std 1.05e+11, mean 2.75e+10
+
 print('# selected rows: ', len(df.index))
+print(df)
+
 
 
 # ------------------------------------------------------------
