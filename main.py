@@ -1,10 +1,13 @@
 
+from random import triangular
+from tempfile import TemporaryFile
 import pandas as pd
 import re
 
 import ticker as tk
 import info as i
 import dividend as dvd
+import source as src
 
 
 def initModel(mode):
@@ -60,136 +63,33 @@ def loadModel(mode, sizing):
         filtered_model.to_csv('model.attributed.' + sizing + '.csv')
         return filtered_model
 
+def loadShortList():
+    modelM = loadModel("read", "m")
+    modelL = loadModel("read", "l")
+    modelXL = loadModel("read", "xl")
 
-modelM = loadModel("read", "m")
-modelL = loadModel("read", "l")
-modelXL = loadModel("read", "xl")
-model = pd.concat([modelM, modelL, modelXL], ignore_index=True)
+    model = pd.concat([modelM, modelL, modelXL], ignore_index=True)
      
-print(model.info())
+    print(model.info())
 
-queryString = "industry != '' " \
-    "and sector != '' " \
-    "and num_streak > 3.9 " \
-    "and num_surviving_years_since_ipo > 6.3 " \
-    "and market_cap > 2.75e+10"
-     
-    #"and num_surviving_years_thru_recession > 1.24 " \ 
+    queryString = "industry != '' " \
+        "and sector != '' " \
+        "and num_streak > 3.9 " \
+        "and num_surviving_years_since_ipo > 6.3 " \
+        "and market_cap > 2.75e+10"
+        
+    df = model.query(queryString).sort_values(by=['market_cap', 'num_streak', 'volume'], ascending=False)
+    # print(df['num_streak'].describe()) #std 13.3, mean 3.9 
+    # print(df['num_surviving_years_thru_recession'].describe()) #std 0.86, mean 1.24
+    # print(df['num_surviving_years_since_ipo'].describe()) #std 7.1, mean 6.3
+    # print(df['market_cap'].describe()) #  std 1.05e+11, mean 2.75e+10
 
-df = model.query(queryString).sort_values(by=['market_cap', 'num_streak', 'volume'], ascending=False)
-# print(df['num_streak'].describe()) #std 13.3, mean 3.9 
-# print(df['num_surviving_years_thru_recession'].describe()) #std 0.86, mean 1.24
-# print(df['num_surviving_years_since_ipo'].describe()) #std 7.1, mean 6.3
-# print(df['market_cap'].describe()) #  std 1.05e+11, mean 2.75e+10
-
-print('# selected rows: ', len(df.index))
-print(df)
-
+    print('# selected rows: ', len(df.index))
+    print(df)
+    df.to_csv('model.attributed.shortlist.csv')
 
 
-# ------------------------------------------------------------
-# ------------------------------------------------------------
-# ------------------------------------------------------------
-# ------------------------------------------------------------
+#model = pd.read_csv('model.attributed.shortlist.csv')
 
-# print(dividend_with_info.query(queryString)[['tick','num_streak', 'market_cap','industry','sector']].sort_values(by=['market_cap'] , ascending=False))
+src.fetchEarningFromYahoo('AAPL')
 
-
-
-# dvd.reload()
-# i.save(i.model(pd.read_csv('dividends.nasdaq.csv')),'dividends_with_info.nasdaq.csv')
-# dividend_with_info = i.getModel()
-
-
-# print(dividend_with_info.info())
-# #print(dividend_with_info.head())
-# print(dividend_with_info.isna().any())
-# #print(dividend_with_info.isnull().any())
-
-# print(dividend_with_info[dividend_with_info['exchange'].isna()])
-# print(dividend_with_info[dividend_with_info['industry'].notna()])
-# print(dividend_with_info[dividend_with_info['sector'].isna()])
-# print(dividend_with_info[dividend_with_info['share_volume'].isna()])
-# print(dividend_with_info[dividend_with_info['trade_volume'].isna()])
-# print(dividend_with_info[dividend_with_info['market_cap'].isna()])
-# print(dividend_with_info[dividend_with_info['_pe'].isna()])
-# print(dividend_with_info[dividend_with_info['_yield'].isna()])
-# print(dividend_with_info[dividend_with_info['_annualized_dividend'].isna()])
-# print(dividend_with_info[dividend_with_info['_eps'].isna()])
-# print(dividend_with_info[dividend_with_info['_eps'].isnull()])
-
-#print(dividend_with_info[dividend_with_info.isna().any(axis=1)])
-#print(dividend_with_info[dividend_with_info.isnull().any(axis=1)])
-
-
-#dividend_with_info['_eps'] = dividend_with_info['_eps'].fillna(0)
-
-#print(dividend_with_info[dividend_with_info['industry'].isna()])
-
-#float(Decimal(sub(r'[^\d.]', '', highlow_52[0])))
-#share_volume.append(int((data['summaryData']['ShareVolume']['value']).replace(",","")))                
-
-# dividend_with_info['exchange'] = dividend_with_info['exchange'].fillna('')
-# dividend_with_info['industry'] = dividend_with_info['industry'].fillna('')
-# dividend_with_info['sector'] = dividend_with_info['sector'].fillna('')
-
-# dividend_with_info['share_volume'] = dividend_with_info['share_volume'].fillna('0.0')
-# dividend_with_info['share_volume'] = dividend_with_info['share_volume'].str.replace('$','')
-# dividend_with_info['share_volume'] = dividend_with_info['share_volume'].str.replace(',','')
-# dividend_with_info['share_volume'] = dividend_with_info['share_volume'].astype(float)
-
-# dividend_with_info['trade_volume'] = dividend_with_info['trade_volume'].fillna('0.0')
-# dividend_with_info['trade_volume'] = dividend_with_info['trade_volume'].str.replace('$','')
-# dividend_with_info['trade_volume'] = dividend_with_info['trade_volume'].str.replace(',','')
-# dividend_with_info['trade_volume'] = dividend_with_info['trade_volume'].astype(float)
-
-# dividend_with_info['market_cap'] = dividend_with_info['market_cap'].fillna('0.0')
-# dividend_with_info['market_cap'] = dividend_with_info['market_cap'].str.replace('$','')
-# dividend_with_info['market_cap'] = dividend_with_info['market_cap'].str.replace(',','')
-# dividend_with_info['market_cap'] = dividend_with_info['market_cap'].astype(float)
-
-# dividend_with_info['_pe'] = dividend_with_info['_pe'].fillna('0.0')
-# dividend_with_info['_pe'] = dividend_with_info['_pe'].str.replace('$','')
-# dividend_with_info['_pe'] = dividend_with_info['_pe'].str.replace(',','')
-# dividend_with_info['_pe'] = dividend_with_info['_pe'].astype(float)
-
-# dividend_with_info['_yield'] = dividend_with_info['_yield'].fillna('0.0')
-# dividend_with_info['_yield'] = dividend_with_info['_yield'].str.replace('$','')
-# dividend_with_info['_yield'] = dividend_with_info['_yield'].str.replace('%','')
-# dividend_with_info['_yield'] = dividend_with_info['_yield'].str.replace(',','')
-# dividend_with_info['_yield'] = dividend_with_info['_yield'].astype(float)
-
-# dividend_with_info['_eps'] = dividend_with_info['_eps'].fillna('0.0')
-# dividend_with_info['_eps'] = dividend_with_info['_eps'].str.replace('$','')
-# dividend_with_info['_eps'] = dividend_with_info['_eps'].str.replace(',','')
-# dividend_with_info['_eps'] = dividend_with_info['_eps'].astype(float)
-
-
-# dividend_with_info['_annualized_dividend'] = dividend_with_info['_annualized_dividend'].fillna('0.0')
-# dividend_with_info['_annualized_dividend'] = dividend_with_info['_annualized_dividend'].str.replace('$','')
-# dividend_with_info['_annualized_dividend'] = dividend_with_info['_annualized_dividend'].str.replace(',','')
-# dividend_with_info['_annualized_dividend'] = dividend_with_info['_annualized_dividend'].astype(float)
-
-
-# print(dividend_with_info.info())
-
-# queryString = "exchange != '' " \
-#     "and industry != '' " \
-#     "and sector != '' " \
-#     "and share_volume > 0.0 " \
-#     "and trade_volume > 0.0 " \
-#     "and market_cap > 0.0 " \
-#     "and _pe > 0.0 " \
-#     "and _yield > 0.0 " \
-#     "and _eps > 0.0 " \
-#     "and _annualized_dividend > 0.0 "
-
-
-# work!
-# queryString = "exchange != '' " \
-#     "and industry != '' " \
-#     "and sector != '' " \
-#     "and market_cap > 1000000 " \
-#     "and _pe > 0"
-
-# print(dividend_with_info.query(queryString)[['tick','num_streak', 'market_cap','industry','sector']].sort_values(by=['market_cap'] , ascending=False))

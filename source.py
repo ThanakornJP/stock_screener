@@ -5,11 +5,6 @@ import pandas as pd
 def getHeader(source):    
     if source == 'nasdaq':
         return {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            "(KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19582"
-        }
-    elif source == 'yahoo':
-        return {
             'authority': 'api.nasdaq.com',
             'accept': 'application/json, text/plain, */*',
             'accept-language': 'en-US,en;q=0.9,th;q=0.8',
@@ -23,7 +18,12 @@ def getHeader(source):
             'sec-fetch-site': 'same-site',
             'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
         }
-
+    elif source == 'yahoo':
+        return {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            "(KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19582"
+        }
+    
 def fetchSummaryFromNasdaq(tick):
     headers = getHeader('nasdaq')
     params = { 'assetclass': 'stocks'}
@@ -44,7 +44,7 @@ def fetchSummaryFromYahoo(source, tick):
     headers = getHeader('yahoo')
     params = { 'assetclass': 'stocks'}
     try:
-        response = requests.get('https://api.nasdaq.com/api/quote/' + ticker + '/summary', params=params, headers=headers)
+        response = requests.get('https://api.nasdaq.com/api/quote/' + tick + '/summary', params=params, headers=headers)
         
         response_json = response.json()        
         info = response_json['data']
@@ -92,3 +92,21 @@ def fetchDividendFromNasdaq(tick):
             return None
     except TypeError:
         return None
+
+
+def fetchEarningFromYahoo(tick):
+    headers = getHeader('yahoo')
+    try:
+        html = requests.get('https://finance.yahoo.com/quote/' + row['tick'] + '?p=' + row['tick'] , headers=headers)
+        soup = BeautifulSoup(html.text, 'lxml')
+
+        # for item in soup.find_all('td'):
+        #         if "data-test" in item.attrs:
+        #             if item["data-test"] == "MARKET_CAP-value": 
+
+        if info is not None and response_json['status']['rCode'] == 200:        
+            return info
+        else:
+            return []
+    except TypeError:
+        return []
