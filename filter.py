@@ -1,8 +1,12 @@
+import xxlimited
+import source as src 
 
 def getTargetPrice(model):
-    highest_dividend_yield = model.5y_low_dividend / model.5y_low
+    ##highest_dividend_yield = model.5y_low_dividend / model.5y_low
     return model.current_dividend / highest_dividend_yield
 
+def getLatestPrice(tick):
+    return src.getLatestPrice(tick)
 
 def filterByGrade(model):
     if model.dpr > 50 and model.dpr <= 70:
@@ -17,9 +21,15 @@ def filterByGrade(model):
     return 
 
 def filterByMoneyTrail(model):
-    highest_dividend_yield = model.5y_low_dividend / model.5y_low
-    zone_1st = model.current_dividend / (highest_dividend_yield * 0.9)
-    zone_2nd = model.current_dividend / (highest_dividend_yield * 0.8)
+
+
+    for index, row in model.iterrows():
+        xxlimited
+
+        #highest_dividend_yield = model.5y_low_dividend / row['5y_low']
+        zone_1st = model.current_dividend / (highest_dividend_yield * 0.9)
+        zone_2nd = model.current_dividend / (highest_dividend_yield * 0.8)
+
 
     if model.last <= zone_1st:
         return 'good'
@@ -29,10 +39,16 @@ def filterByMoneyTrail(model):
         return 'bad'
 
 def filterByPriceTrail(model):
-    price_zone = (model.current_price - model.52w_low ) / (model.52w_high - model.52w_low)
-    if price_zone <= 40:
-        return 'good'
-    elif price_zone > 40 and price_zone <= 60:
-        return 'ok'
-    else:
-        return 'bad'
+    priceTrail = []
+    for index, row in model.iterrows():
+        price_zone = ( getLatestPrice(row['tick']) - row['low_52'] ) / (row['high_52'] - row['low_52'])
+        if price_zone <= 40:
+            priceTrail.append('good')
+        elif price_zone > 40 and price_zone <= 60:
+            priceTrail.append('ok')
+        else:
+            priceTrail.append('bad')
+    
+    model['priace_trail'] = priceTrail
+    return model
+    

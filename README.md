@@ -1,5 +1,9 @@
 # stock_screener
 
+# Key
+https://www.alphavantage.co/support/#api-key
+API Key: HXXBQ51QZIU5O0QH
+
 # Resource
 1. listed company: https://datahub.io/core/nasdaq-listings/r/nasdaq-listed.csv
 

@@ -475,6 +475,30 @@ def clean_stat(model):
     return model
    
 
+def attribute_5y_stat(model):
+    dividend_5y = []
+    return model
+    
 
+def attribute_5y_data(model):
+    low_5y = []
+    high_5y = []
+    open_5y = [] 
+    last_in_5y = []
+
+    for index, row in model.iterrows():
+        info = src.fetch5YFromBarchart(row['tick'])
+        high_5y.append(info['high_5y'])        
+        low_5y.append(info['low_5y'])  
+        open_5y.append(info['open_5y'])   
+        last_in_5y.append(info['last_in_5y'])       
+    
+    model['high_5y'] = high_5y
+    model['low_5y'] = low_5y
+    model['open_5y'] = open_5y
+    model['last_in_5y'] = last_in_5y
+
+
+    return model
 
 

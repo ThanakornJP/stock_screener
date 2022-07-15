@@ -1,4 +1,6 @@
 
+from calendar import month
+from email import header
 from random import triangular
 from tempfile import TemporaryFile
 import pandas as pd
@@ -8,7 +10,9 @@ import ticker as tk
 import info as i
 import dividend as dvd
 import source as src
-
+import filter as f
+import requests
+from bs4 import BeautifulSoup
 
 def initModel(mode):
     if mode == 'new':
@@ -89,7 +93,18 @@ def loadShortList():
     df.to_csv('model.attributed.shortlist.csv')
 
 
-#model = pd.read_csv('model.attributed.shortlist.csv')
+# model = pd.read_csv('model.attributed.shortlist.csv')
+# model = i.attribute_5y_data(model)
+# model.to_csv('model.attributed.shortlist.5y.csv')
 
-src.fetchEarningFromYahoo('AAPL')
+model = pd.read_csv('model.attributed.shortlist.5y.csv')
+print(model.info())
+
+print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y']].head())
+print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y']].tail())
+
+
+
+
+
 
