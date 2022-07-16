@@ -2,9 +2,11 @@
 from calendar import month
 from email import header
 from random import triangular
+import string
 from tempfile import TemporaryFile
 import pandas as pd
 import re
+import json
 
 import ticker as tk
 import info as i
@@ -92,16 +94,27 @@ def loadShortList():
     print(df)
     df.to_csv('model.attributed.shortlist.csv')
 
+    # ++++++++++++++++++++++++++++
+    # adding shortlist 5Y
+    df = i.attribute_data_5y(df)
+    df.to_csv('model.attributed.shortlist.5y.csv')
 
-# model = pd.read_csv('model.attributed.shortlist.csv')
-# model = i.attribute_5y_data(model)
-# model.to_csv('model.attributed.shortlist.5y.csv')
+    df = i.get_dividend_low_5y(model)
+    df.to_csv('model.attributed.shortlist.5y.csv')
+
 
 model = pd.read_csv('model.attributed.shortlist.5y.csv')
-print(model.info())
+print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y', 'dividend_low_5y']][:10])
 
-print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y']].head())
-print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y']].tail())
+# select 2nd record
+# print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y']].iloc[1])
+
+# # select some column
+# print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y']].head())
+# print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y']].tail())
+
+# # select top 10
+# print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y', 'dividend_low_5y']][:10])
 
 
 

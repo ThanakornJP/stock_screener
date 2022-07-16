@@ -474,13 +474,23 @@ def clean_stat(model):
 
     return model
    
-
-def attribute_5y_stat(model):
-    dividend_5y = []
-    return model
+def get_dividend_low_5y(model):    
+    dividend_low_5y = []
+    tmp = model[['tick','raw_dividends']]
+    tmp['raw_dividends'] = tmp['raw_dividends'].replace({'\'': '"'}, regex=True)
     
+    for index, row in tmp.iterrows():
+        json_object = json.loads(str(row['raw_dividends']))        
+        df = pd.DataFrame(json_object)        
+        df['amount'] = df['amount'].replace({'\$':''}, regex=True)
+        df['amount'] = df['amount'].astype(float)
+        # quarter dividend x 4 to get 5Y-lowannualized dividend
+        dividend_low_5y.append(float(df['amount'][:20].describe().min()*4))            
+    
+    model['dividend_low_5y'] = dividend_low_5y
+    return model
 
-def attribute_5y_data(model):
+def attribute_data_5y(model):
     low_5y = []
     high_5y = []
     open_5y = [] 

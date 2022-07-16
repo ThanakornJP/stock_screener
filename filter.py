@@ -6,7 +6,15 @@ def getTargetPrice(model):
     return model.current_dividend / highest_dividend_yield
 
 def getLatestPrice(tick):
-    return src.getLatestPrice(tick)
+    return src.fetchLatestPriceFromYahoo(tick)
+
+
+def getLatestDividend(tick):
+    tick
+    return src.fetchLatestDividendFromYahoo(tick)
+
+# ---------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------
 
 def filterByGrade(model):
     if model.dpr > 50 and model.dpr <= 70:
@@ -22,14 +30,18 @@ def filterByGrade(model):
 
 def filterByMoneyTrail(model):
 
+    #earnings = profit that company generates and can be used to reinvest, to pay dividend, to repurchase shares
+    #dividend = payment that company makes to their shareholders
+
+
+    # dividend yield = annual dividend per share / price per share
 
     for index, row in model.iterrows():
-        xxlimited
+        
+        highest_dividend_yield = row['dividend_low_5y'] / row['low_5y']
 
-        #highest_dividend_yield = model.5y_low_dividend / row['5y_low']
-        zone_1st = model.current_dividend / (highest_dividend_yield * 0.9)
-        zone_2nd = model.current_dividend / (highest_dividend_yield * 0.8)
-
+        zone_1st = getLatestDividend(row['tick']) / (highest_dividend_yield * 0.9)
+        zone_2nd = getLatestDividend(row['tick']) / (highest_dividend_yield * 0.8)
 
     if model.last <= zone_1st:
         return 'good'
