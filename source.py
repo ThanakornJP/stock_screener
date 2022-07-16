@@ -169,25 +169,16 @@ def fetch5YFromBarchart(tick):
     except TypeError:
         return []
 
-def fetchLatestDividendFromYahoo(tick):
-    try:
-        html = requests.get('https://finance.yahoo.com/quote/' + tick + '/analysis?p=' + tick , headers=getHeader('yahoo'))
-        soup = BeautifulSoup(html.text, 'lxml')
-
-        print
-
-        if len(info) > 0:        
-            return info
-        else:
-            return []
-    except TypeError:
-        return []
 
 def fetchLatestPriceFromYahoo(tick):
-    try:
-        if len(info) > 0:        
-            return info
+    try:        
+        html = requests.get('https://finance.yahoo.com/quote/' + tick + '/?p=' + tick , headers=getHeader('yahoo'))
+        soup = BeautifulSoup(html.text, 'lxml')        
+        last = float(soup.find('fin-streamer',{'data-symbol': tick, 'data-field': 'regularMarketPrice'}).text)
+        
+        if last is not None:        
+            return last
         else:
-            return []
+            return 0
     except TypeError:
-        return []
+        return 0

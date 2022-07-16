@@ -96,17 +96,32 @@ def loadShortList():
 
     # ++++++++++++++++++++++++++++
     # adding shortlist 5Y
-    df = i.attribute_data_5y(df)
+    df = i.attribute_price_5y(df)
     df.to_csv('model.attributed.shortlist.5y.csv')
 
-    df = i.get_dividend_low_5y(model)
+    df = i.attribute_dividend_5y(df)
+    df.to_csv('model.attributed.shortlist.5y.csv')
+    
+    df = i.attribute_price_latest(df)
+    df.to_csv('model.attributed.shortlist.5y.csv')
+
+    df = i.attribute_price_zone(df)
+    df.to_csv('model.attributed.shortlist.5y.csv')
+
+    df = i.attribute_money_zone(df)
     df.to_csv('model.attributed.shortlist.5y.csv')
 
 
 model = pd.read_csv('model.attributed.shortlist.5y.csv')
-print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y', 'dividend_low_5y']][:10])
 
-# select 2nd record
+model = f.filterByPriceTrail(model)
+model = f.filterByMoneyTrail(model)
+model.to_csv('model.attributed.shortlist.5y.csv')
+
+print(model.info())
+print(model[['last', 'low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y', 'dividend_low_5y', 'price_zone', 'target_price', 'zone_1', 'zone_2']][:10])
+
+# # select 2nd record
 # print(model[['low_today', 'high_today', 'low_52', 'high_52', 'low_5y', 'high_5y']].iloc[1])
 
 # # select some column

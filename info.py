@@ -97,8 +97,6 @@ def load(model):
     # return pd.read_csv('dividends.csv')    
     return pd.read_csv(model)        
 
-
-
 def model(dividend_df): 
     name = []
     stock_type = []
@@ -474,8 +472,9 @@ def clean_stat(model):
 
     return model
    
-def get_dividend_low_5y(model):    
+def attribute_dividend_5y(model):      
     dividend_low_5y = []
+    dividend_high_5y = []
     tmp = model[['tick','raw_dividends']]
     tmp['raw_dividends'] = tmp['raw_dividends'].replace({'\'': '"'}, regex=True)
     
@@ -486,11 +485,13 @@ def get_dividend_low_5y(model):
         df['amount'] = df['amount'].astype(float)
         # quarter dividend x 4 to get 5Y-lowannualized dividend
         dividend_low_5y.append(float(df['amount'][:20].describe().min()*4))            
+        dividend_high_5y.append(float(df['amount'][:20].describe().max()*4))
     
     model['dividend_low_5y'] = dividend_low_5y
+    model['dividend_high_5y'] = dividend_high_5y
     return model
 
-def attribute_data_5y(model):
+def attribute_price_5y(model):
     low_5y = []
     high_5y = []
     open_5y = [] 
@@ -512,3 +513,41 @@ def attribute_data_5y(model):
     return model
 
 
+def attribute_money_zone(model):
+    target_price = []
+    zone_1 = []
+    zone_2 = []
+    for index, row in model.iterrows():
+        if row['low_5y'] > 0:
+            highest_dividend_yield = row['dividend_low_5y'] / row['low_5y']
+            target_price.append(row['_annualized_dividend'] / (highest_dividend_yield * 1.0))
+            zone_1.append(row['_annualized_dividend'] / (highest_dividend_yield * 0.9))
+            zone_2.append(row['_annualized_dividend'] / (highest_dividend_yield * 0.8))
+        else:
+            target_price.append(0.0)
+            zone_1.append(0.0)
+            zone_2.append(0.0)
+
+    model['target_price'] = target_price
+    model['zone_1'] = zone_1
+    model['zone_2'] = zone_2
+    return model
+
+
+def attribute_price_latest(model):
+    last = [] 
+    for index, row in model.iterrows():
+        last.append(src.fetchLatestPriceFromYahoo(row['tick']))
+    
+    model['last'] = last
+    return model
+
+def attribute_price_zone(model):
+    price_zone = []
+    
+    for index, row in model.iterrows():
+        price_zone.append( (float(row['last']) - float(row['low_52'])) / ( float(row['high_52']) - float(row['low_52'])) )
+        
+
+    model['price_zone'] = price_zone
+    return model
