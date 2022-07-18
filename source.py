@@ -1,3 +1,5 @@
+import xxlimited
+from numpy import inner
 import requests 
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -94,19 +96,89 @@ def fetchDividendFromNasdaq(tick):
         return None
 
 
-def fetchEarningFromYahoo(tick):
-    headers = getHeader('yahoo')
+def fetch5YFromAlphaVantage(tick):
+
     try:
-        html = requests.get('https://finance.yahoo.com/quote/' + row['tick'] + '?p=' + row['tick'] , headers=headers)
+        # html = requests.get('https://finance.yahoo.com/quote/' + row['tick'] + '?p=' + row['tick'] , headers=headers)
+        # soup = BeautifulSoup(html.text, 'lxml')
+        # requests.get('https://eodhistoricaldata.com/api/eod/AAPL.US?api_token=demo&from=2016-01-01&to=2021-12-31')        
+        # response_json = response.json()        
+        # info = response_json['data']
+        
+        url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + tick + '&outputsize=full&apikey=HXXBQ51QZIU5O0QH'
+        r = requests.get(url)
+        data = r.json()
+
+        if data is not None:        
+            return data
+        else:
+            return []
+    except TypeError:
+        return []
+
+
+def fetch5YFromBarchart(tick):
+    info = {}
+    try:        
+        url = 'https://www.barchart.com/stocks/quotes/' + tick + '/performance?mode=daily'
+        print(url)
+        html = requests.get(url, headers=getHeader('yahoo'))
         soup = BeautifulSoup(html.text, 'lxml')
+        a = soup.find("div",{"class":"barchart-content-block symbol-price-performance"})
+        # print(len(a.contents))
+        # print(list(a.contents[3].contents[1].contents[1].children))
+        # print(len(list(a.contents[3].contents[1].contents[1].children)))
+        # print(list(a.contents[3].contents[1].contents[1].children)[19])
+        # print(list(list(a.contents[3].contents[1].contents[1].children)[19]))
 
-        # for item in soup.find_all('td'):
-        #         if "data-test" in item.attrs:
-        #             if item["data-test"] == "MARKET_CAP-value": 
 
-        if info is not None and response_json['status']['rCode'] == 200:        
+        # 0-2: header
+        # 3: 5 day
+        # 5: 1 month
+        # 7: 3 month
+        # 9: 6 month 
+        # 11: YTD
+        # 13: 52wk 
+        # 15: 2Y
+        # 17: 3y
+        # 19: 5y
+        # 21: 10y
+        # 23: 20y
+
+        if len(list(a.contents[3].contents[1].contents[1].children)) >= 20:    
+            info['low_5y'] = list(list(a.contents[3].contents[1].contents[1].children)[19])[3].find_all('span')[0].getText()
+            info['high_5y'] = list(list(a.contents[3].contents[1].contents[1].children)[19])[7].find_all('span')[0].getText()
+            info['open_5y'] = list(list(a.contents[3].contents[1].contents[1].children)[19])[5].find('barchart-row-chart')['data-open-price']
+            info['last_in_5y'] = list(list(a.contents[3].contents[1].contents[1].children)[19])[5].find('barchart-row-chart')['data-approach']
+            info['change_5y'] = list(list(a.contents[3].contents[1].contents[1].children)[19])[9].find_all('span')[0].getText()
+            info['change%_5y'] = list(list(a.contents[3].contents[1].contents[1].children)[19])[9].find_all('span')[1].getText()
+        else:
+            info['low_5y'] = '0'
+            info['high_5y'] = '0'
+            info['open_5y'] = '0'
+            info['last_in_5y'] = '0'
+            info['change_5y'] = '0'
+            info['change%_5y'] = '0'
+
+        print(info)
+
+        if len(info) > 0:        
             return info
         else:
             return []
     except TypeError:
         return []
+
+
+def fetchLatestPriceFromYahoo(tick):
+    try:        
+        html = requests.get('https://finance.yahoo.com/quote/' + tick + '/?p=' + tick , headers=getHeader('yahoo'))
+        soup = BeautifulSoup(html.text, 'lxml')        
+        last = float(soup.find('fin-streamer',{'data-symbol': tick, 'data-field': 'regularMarketPrice'}).text)
+        
+        if last is not None:        
+            return last
+        else:
+            return 0
+    except TypeError:
+        return 0

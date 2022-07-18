@@ -1,4 +1,52 @@
-# stock_screener
+# START Schema
+`Information Group`
+- tick                                79 non-null     object 
+- name                                79 non-null     object 
+- market_cap                          79 non-null     float64
+- volume                              79 non-null     int64  
+- ipo_year                            79 non-null     float64
+- sector                              66 non-null     object 
+- industry                            66 non-null     object 
+- country                             77 non-null     object 
+- exchange                            79 non-null     object 
+
+`Present Data Group` ---> OHLC
+- low_today                           79 non-null     float64
+- high_today                          79 non-null     float64
+- previous_close                      79 non-null     float64
+- last
+
+`History Data Group`
+- low_52                              79 non-null     float64
+- high_52                             79 non-null     float64
+- low_lastmonth
+- high_lastmonth
+- low_lastweek
+- high_lastweek
+- low_yesterday
+- high_yesterday
+ 
+`Ratio / Stat Data Group`
+- _pe                                 79 non-null     float64
+- _yield                              79 non-null     float64
+- _eps                                79 non-null     float64
+- _annualized_dividend                79 non-null     float64
+ 
+`Behaviour Group`
+- num_surviving_years_thru_recession  79 non-null     int64  
+- num_surviving_years_since_ipo       79 non-null     int64  
+- num_streak                          79 non-null     int64  
+- streak_start_date                   79 non-null     object 
+- incremental_percentage              79 non-null     float64 ---> dividend incremental rate
+
+`Reference`
+- raw_dividends                       79 non-null     object 
+
+END Schema
+----
+# Key
+https://www.alphavantage.co/support/#api-key
+API Key: HXXBQ51QZIU5O0QH
 
 # Resource
 1. listed company: https://datahub.io/core/nasdaq-listings/r/nasdaq-listed.csv
